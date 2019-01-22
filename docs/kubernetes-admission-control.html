@@ -1895,6 +1895,32 @@
             
         </li>
     
+        <li class="chapter " data-level="1.13.2" data-path="discovery.html">
+            
+                <a href="discovery.html#example">
+            
+                    
+                    Example
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.13.3" data-path="discovery.html">
+            
+                <a href="discovery.html#limitations">
+            
+                    
+                    Limitations
+            
+                </a>
+            
+
+            
+        </li>
+    
 
             </ul>
             
@@ -1945,7 +1971,20 @@
             
         </li>
     
-        <li class="chapter " data-level="1.15" data-path="faq.html">
+        <li class="chapter " data-level="1.15" data-path="plugins.html">
+            
+                <a href="plugins.html">
+            
+                    
+                    Plugins
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.16" data-path="faq.html">
             
                 <a href="faq.html">
             
@@ -1958,7 +1997,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.16" data-path="comparison-to-other-systems.html">
+        <li class="chapter " data-level="1.17" data-path="comparison-to-other-systems.html">
             
                 <a href="comparison-to-other-systems.html">
             
@@ -1972,7 +2011,7 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.16.1" data-path="comparison-to-other-systems.html">
+        <li class="chapter " data-level="1.17.1" data-path="comparison-to-other-systems.html">
             
                 <a href="comparison-to-other-systems.html#role-based-access-control-rbac">
             
@@ -1985,7 +2024,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.16.2" data-path="comparison-to-other-systems.html">
+        <li class="chapter " data-level="1.17.2" data-path="comparison-to-other-systems.html">
             
                 <a href="comparison-to-other-systems.html#attribute-based-access-control-abac">
             
@@ -1998,7 +2037,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.16.3" data-path="comparison-to-other-systems.html">
+        <li class="chapter " data-level="1.17.3" data-path="comparison-to-other-systems.html">
             
                 <a href="comparison-to-other-systems.html#amazon-web-services-iam">
             
@@ -2011,7 +2050,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.16.4" data-path="comparison-to-other-systems.html">
+        <li class="chapter " data-level="1.17.4" data-path="comparison-to-other-systems.html">
             
                 <a href="comparison-to-other-systems.html#xacml">
             
@@ -2127,6 +2166,19 @@
             
         </li>
     
+        <li class="chapter " data-level="2.8" data-path="ceph-authorization.html">
+            
+                <a href="ceph-authorization.html">
+            
+                    
+                    Ceph Authorization
+            
+                </a>
+            
+
+            
+        </li>
+    
 
     
         
@@ -2204,7 +2256,7 @@
 <p>This tutorial requires Kubernetes 1.9 or later. To run the tutorial locally, we recommend using <a href="https://kubernetes.io/docs/getting-started-guides/minikube" target="_blank">minikube</a> in version <code>v0.28+</code> with Kubernetes 1.10 (which is the default).</p>
 <h2 id="steps">Steps</h2>
 <h3 id="1-start-kubernetes-recommended-admisson-controllers-enabled">1. Start Kubernetes recommended Admisson Controllers enabled</h3>
-<p>To implement admission control rules that validate Kubernetes resources during create, update, and delete operations, you must enable the <a href="https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#validatingadmissionwebhook" target="_blank">ValidatingAdmissionWebhook</a> when the Kubernetes API server is started. the admission controller is included in the <a href="https://kubernetes.io/docs/admin/admission-controllers/#is-there-a-recommended-set-of-admission-controllers-to-use" target="_blank">recommended set of admission controllers to enable</a></p>
+<p>To implement admission control rules that validate Kubernetes resources during create, update, and delete operations, you must enable the <a href="https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#validatingadmissionwebhook" target="_blank">ValidatingAdmissionWebhook</a> when the Kubernetes API server is started. The ValidatingAdmissionWebhook admission controller is included in the <a href="https://kubernetes.io/docs/admin/admission-controllers/#is-there-a-recommended-set-of-admission-controllers-to-use" target="_blank">recommended set of admission controllers to enable</a></p>
 <p>Start minikube:</p>
 <pre><code class="lang-bash">minikube start
 </code></pre>
@@ -2328,7 +2380,7 @@ openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out s
         <span class="hljs-comment"># authentication and authorization on the daemon. See the Security page for</span>
         <span class="hljs-comment"># details: https://www.openpolicyagent.org/docs/security.html.</span>
 <span class="hljs-attr">        - name:</span> opa
-<span class="hljs-attr">          image:</span> openpolicyagent/opa:<span class="hljs-number">0.10</span><span class="hljs-number">.2</span>
+<span class="hljs-attr">          image:</span> openpolicyagent/opa:<span class="hljs-number">0.10</span><span class="hljs-number">.3</span>
 <span class="hljs-attr">          args:</span>
 <span class="hljs-bullet">            -</span> <span class="hljs-string">&quot;run&quot;</span>
 <span class="hljs-bullet">            -</span> <span class="hljs-string">&quot;--server&quot;</span>
@@ -2597,7 +2649,7 @@ satisfy changing operational requirements.</p>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Kubernetes Admission Control","level":"2.6","depth":1,"next":{"title":"Terraform Testing","level":"2.7","depth":1,"path":"terraform.md","ref":"terraform.md","articles":[]},"previous":{"title":"Kafka Authorization","level":"2.5","depth":1,"path":"kafka-authorization.md","ref":"kafka-authorization.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["header","addcssjs","collapsible-menu","custom-favicon","ga","-fontsettings","ace"],"pluginsConfig":{"collapsible-menu":{},"ace":{},"search":{},"layout":{"headerPath":"layouts/header.html"},"addcssjs":{"css":[],"js":[]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"header":{},"highlight":{},"favicon":"images/favicon.png","custom-favicon":{},"ga":{"configuration":"auto","token":"UA-84550302-1"},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"kubernetes-admission-control.md","mtime":"2018-12-10T22:15:59.709Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-12-10T22:16:58.171Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Kubernetes Admission Control","level":"2.6","depth":1,"next":{"title":"Terraform Testing","level":"2.7","depth":1,"path":"terraform.md","ref":"terraform.md","articles":[]},"previous":{"title":"Kafka Authorization","level":"2.5","depth":1,"path":"kafka-authorization.md","ref":"kafka-authorization.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["header","addcssjs","collapsible-menu","custom-favicon","ga","-fontsettings","ace"],"pluginsConfig":{"collapsible-menu":{},"ace":{},"search":{},"layout":{"headerPath":"layouts/header.html"},"addcssjs":{"css":[],"js":[]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"header":{},"highlight":{},"favicon":"images/favicon.png","custom-favicon":{},"ga":{"configuration":"auto","token":"UA-84550302-1"},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"kubernetes-admission-control.md","mtime":"2019-01-22T15:44:31.793Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-01-22T15:45:40.970Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

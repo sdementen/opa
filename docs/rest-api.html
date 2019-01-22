@@ -1895,6 +1895,32 @@
             
         </li>
     
+        <li class="chapter " data-level="1.13.2" data-path="discovery.html">
+            
+                <a href="discovery.html#example">
+            
+                    
+                    Example
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.13.3" data-path="discovery.html">
+            
+                <a href="discovery.html#limitations">
+            
+                    
+                    Limitations
+            
+                </a>
+            
+
+            
+        </li>
+    
 
             </ul>
             
@@ -1945,7 +1971,20 @@
             
         </li>
     
-        <li class="chapter " data-level="1.15" data-path="faq.html">
+        <li class="chapter " data-level="1.15" data-path="plugins.html">
+            
+                <a href="plugins.html">
+            
+                    
+                    Plugins
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.16" data-path="faq.html">
             
                 <a href="faq.html">
             
@@ -1958,7 +1997,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.16" data-path="comparison-to-other-systems.html">
+        <li class="chapter " data-level="1.17" data-path="comparison-to-other-systems.html">
             
                 <a href="comparison-to-other-systems.html">
             
@@ -1972,7 +2011,7 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.16.1" data-path="comparison-to-other-systems.html">
+        <li class="chapter " data-level="1.17.1" data-path="comparison-to-other-systems.html">
             
                 <a href="comparison-to-other-systems.html#role-based-access-control-rbac">
             
@@ -1985,7 +2024,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.16.2" data-path="comparison-to-other-systems.html">
+        <li class="chapter " data-level="1.17.2" data-path="comparison-to-other-systems.html">
             
                 <a href="comparison-to-other-systems.html#attribute-based-access-control-abac">
             
@@ -1998,7 +2037,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.16.3" data-path="comparison-to-other-systems.html">
+        <li class="chapter " data-level="1.17.3" data-path="comparison-to-other-systems.html">
             
                 <a href="comparison-to-other-systems.html#amazon-web-services-iam">
             
@@ -2011,7 +2050,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.16.4" data-path="comparison-to-other-systems.html">
+        <li class="chapter " data-level="1.17.4" data-path="comparison-to-other-systems.html">
             
                 <a href="comparison-to-other-systems.html#xacml">
             
@@ -2120,6 +2159,19 @@
             
                     
                     Terraform Testing
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.8" data-path="ceph-authorization.html">
+            
+                <a href="ceph-authorization.html">
+            
+                    
+                    Ceph Authorization
             
                 </a>
             
@@ -3370,8 +3422,15 @@ Content-Type: application/json
 </ul>
 <p>If the default decision (defaulting to <code>/system/main</code>) is undefined, the server returns 404.</p>
 <h3 id="execute-an-ad-hoc-query">Execute an Ad-hoc Query</h3>
+<p>Execute an ad-hoc query and return bindings for variables found in the query.</p>
 <pre><code>GET /v1/query
-</code></pre><p>Execute an ad-hoc query and return bindings for variables found in the query.</p>
+</code></pre><p>For queries that have large JSON values it is recommended to use the <code>POST</code> method with the query included as the <code>POST</code> body</p>
+<pre><code>POST /v1/query HTTP/1.1
+Content-Type: application/json
+</code></pre><pre><code class="lang-json">{
+  <span class="hljs-string">&quot;query&quot;</span>: <span class="hljs-string">&quot;data.servers[i].ports[_] = \&quot;p2\&quot;; data.servers[i].name = name&quot;</span>
+}
+</code></pre>
 <h4 id="example-request">Example Request</h4>
 <pre><code>GET /v1/query?q=data.servers[i].ports[_] = &quot;p2&quot;; data.servers[i].name = name HTTP/1.1
 </code></pre><h4 id="example-response">Example Response</h4>
@@ -3393,7 +3452,7 @@ Content-Type: application/json
 </code></pre>
 <h4 id="query-parameters">Query Parameters</h4>
 <ul>
-<li><strong>q</strong> - The ad-hoc query to execute. OPA will parse, compile, and execute the query represented by the parameter value. The value MUST be URL encoded.</li>
+<li><strong>q</strong> - The ad-hoc query to execute. OPA will parse, compile, and execute the query represented by the parameter value. The value MUST be URL encoded. Only used in GET method. For POST method the query is sent as part of the request body and this parameter is not used. </li>
 <li><strong>pretty</strong> - If parameter is <code>true</code>, response will formatted for humans.</li>
 <li><strong>explain</strong> - Return query explanation in addition to result. Values: <strong>full</strong>.</li>
 <li><strong>metrics</strong> - Return query performance metrics in addition to result. See <a href="#performance-metrics">Performance Metrics</a> for more detail.</li>
@@ -3785,6 +3844,7 @@ are currently supported for the following APIs:</p>
 <li><strong>timer_rego_query_eval_ns</strong>: time taken (in nanonseconds) to evaluate the query.</li>
 <li><strong>timer_rego_module_parse_ns</strong>: time taken (in nanoseconds) to parse the input policy module.</li>
 <li><strong>timer_rego_module_compile_ns</strong>: time taken (in nanoseconds) to compile the loaded policy modules.</li>
+<li><strong>timer_server_handler_ns</strong>: time take (in nanoseconds) to handle the API request.</li>
 </ul>
 <p>OPA also supports query instrumentation. To enable query instrumentation,
 specify the <code>instrument=true</code> query parameter when executing the API call.
@@ -3862,7 +3922,7 @@ instrumentation off unless you are debugging a performance problem.</p>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"REST API","level":"1.7","depth":1,"next":{"title":"Policy API","level":"1.7.1","depth":2,"anchor":"#policy-api","path":"rest-api.md","ref":"rest-api.md#policy-api","articles":[{"title":"List Policies","level":"1.7.1.1","depth":3,"anchor":"#list-policies","path":"rest-api.md","ref":"rest-api.md#list-policies","articles":[]},{"title":"Get a Policy","level":"1.7.1.2","depth":3,"anchor":"#get-a-policy","path":"rest-api.md","ref":"rest-api.md#get-a-policy","articles":[]},{"title":"Create or Update a Policy","level":"1.7.1.3","depth":3,"anchor":"#create-or-update-a-policy","path":"rest-api.md","ref":"rest-api.md#create-or-update-a-policy","articles":[]},{"title":"Delete a Policy","level":"1.7.1.4","depth":3,"anchor":"#delete-a-policy","path":"rest-api.md","ref":"rest-api.md#delete-a-policy","articles":[]}]},"previous":{"title":"Discovery","level":"1.6.7","depth":2,"anchor":"#discovery","path":"configuration.md","ref":"configuration.md#discovery","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["header","addcssjs","collapsible-menu","custom-favicon","ga","-fontsettings","ace"],"pluginsConfig":{"collapsible-menu":{},"ace":{},"search":{},"layout":{"headerPath":"layouts/header.html"},"addcssjs":{"css":[],"js":[]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"header":{},"highlight":{},"favicon":"images/favicon.png","custom-favicon":{},"ga":{"configuration":"auto","token":"UA-84550302-1"},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"rest-api.md","mtime":"2018-12-10T22:15:59.885Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-12-10T22:16:58.171Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"REST API","level":"1.7","depth":1,"next":{"title":"Policy API","level":"1.7.1","depth":2,"anchor":"#policy-api","path":"rest-api.md","ref":"rest-api.md#policy-api","articles":[{"title":"List Policies","level":"1.7.1.1","depth":3,"anchor":"#list-policies","path":"rest-api.md","ref":"rest-api.md#list-policies","articles":[]},{"title":"Get a Policy","level":"1.7.1.2","depth":3,"anchor":"#get-a-policy","path":"rest-api.md","ref":"rest-api.md#get-a-policy","articles":[]},{"title":"Create or Update a Policy","level":"1.7.1.3","depth":3,"anchor":"#create-or-update-a-policy","path":"rest-api.md","ref":"rest-api.md#create-or-update-a-policy","articles":[]},{"title":"Delete a Policy","level":"1.7.1.4","depth":3,"anchor":"#delete-a-policy","path":"rest-api.md","ref":"rest-api.md#delete-a-policy","articles":[]}]},"previous":{"title":"Discovery","level":"1.6.7","depth":2,"anchor":"#discovery","path":"configuration.md","ref":"configuration.md#discovery","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["header","addcssjs","collapsible-menu","custom-favicon","ga","-fontsettings","ace"],"pluginsConfig":{"collapsible-menu":{},"ace":{},"search":{},"layout":{"headerPath":"layouts/header.html"},"addcssjs":{"css":[],"js":[]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"header":{},"highlight":{},"favicon":"images/favicon.png","custom-favicon":{},"ga":{"configuration":"auto","token":"UA-84550302-1"},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"rest-api.md","mtime":"2019-01-22T15:44:31.953Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-01-22T15:45:40.970Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

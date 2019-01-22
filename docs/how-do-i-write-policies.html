@@ -1895,6 +1895,32 @@
             
         </li>
     
+        <li class="chapter " data-level="1.13.2" data-path="discovery.html">
+            
+                <a href="discovery.html#example">
+            
+                    
+                    Example
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.13.3" data-path="discovery.html">
+            
+                <a href="discovery.html#limitations">
+            
+                    
+                    Limitations
+            
+                </a>
+            
+
+            
+        </li>
+    
 
             </ul>
             
@@ -1945,7 +1971,20 @@
             
         </li>
     
-        <li class="chapter " data-level="1.15" data-path="faq.html">
+        <li class="chapter " data-level="1.15" data-path="plugins.html">
+            
+                <a href="plugins.html">
+            
+                    
+                    Plugins
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.16" data-path="faq.html">
             
                 <a href="faq.html">
             
@@ -1958,7 +1997,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.16" data-path="comparison-to-other-systems.html">
+        <li class="chapter " data-level="1.17" data-path="comparison-to-other-systems.html">
             
                 <a href="comparison-to-other-systems.html">
             
@@ -1972,7 +2011,7 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.16.1" data-path="comparison-to-other-systems.html">
+        <li class="chapter " data-level="1.17.1" data-path="comparison-to-other-systems.html">
             
                 <a href="comparison-to-other-systems.html#role-based-access-control-rbac">
             
@@ -1985,7 +2024,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.16.2" data-path="comparison-to-other-systems.html">
+        <li class="chapter " data-level="1.17.2" data-path="comparison-to-other-systems.html">
             
                 <a href="comparison-to-other-systems.html#attribute-based-access-control-abac">
             
@@ -1998,7 +2037,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.16.3" data-path="comparison-to-other-systems.html">
+        <li class="chapter " data-level="1.17.3" data-path="comparison-to-other-systems.html">
             
                 <a href="comparison-to-other-systems.html#amazon-web-services-iam">
             
@@ -2011,7 +2050,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.16.4" data-path="comparison-to-other-systems.html">
+        <li class="chapter " data-level="1.17.4" data-path="comparison-to-other-systems.html">
             
                 <a href="comparison-to-other-systems.html#xacml">
             
@@ -2120,6 +2159,19 @@
             
                     
                     Terraform Testing
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.8" data-path="ceph-authorization.html">
+            
+                <a href="ceph-authorization.html">
+            
+                    
+                    Ceph Authorization
             
                 </a>
             
@@ -2438,7 +2490,7 @@ undefined
 <p>Variables appearing in the head of a rule must also appear in a non-negated equality expression within the same rule. This property ensures that if the rule is evaluated and all of the expressions evaluate to true for some set of variable bindings, the variable in the head of the rule will be defined.</p>
 <h2 id="references">References</h2>
 <p>References are used to access nested documents.</p>
-<p>The examples in this section use the data defined in the <a href="#examples-data">Examples</a> section.</p>
+<p>The examples in this section use the data defined in the <a href="how-do-i-write-policies.html#example-data">Examples</a> section.</p>
 <p>The simplest reference contains no variables. For example, the following reference returns the hostname of the second server in the first site document from our example data:</p>
 <pre><code class="lang-ruby">&gt; sites[<span class="hljs-number">0</span>].servers[<span class="hljs-number">1</span>].hostname
 <span class="hljs-string">&quot;helium&quot;</span>
@@ -2666,10 +2718,10 @@ names = [site.name <span class="hljs-keyword">for</span> site <span class="hljs-
 ]
 </code></pre>
 <h2 id="rules">Rules</h2>
-<p>Rules define the content of <a href="how-does-opa-work.html#virtual-documents">Virtual Documents</a> in
+<p>Rules define the content of <a href="how-does-opa-work.html#rules-and-virtual-documents">Virtual Documents</a> in
 OPA. When OPA evaluates a rule, we say OPA <em>generates</em> the content of the
 document that is defined by the rule.</p>
-<p>The sample code in this section make use of the data defined in <a href="#examples">Examples</a>.</p>
+<p>The sample code in this section make use of the data defined in  <a href="how-do-i-write-policies.html#example-data">Examples</a>.</p>
 <h3 id="generating-sets">Generating Sets</h3>
 <p>The following rule defines a set containing the hostnames of all servers:</p>
 <pre><code class="lang-ruby">hostnames[name] { sites[<span class="hljs-number">_</span>].servers[<span class="hljs-number">_</span>].hostname = name }
@@ -2908,7 +2960,7 @@ p(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, y)<spa
 &gt; p(5, 3, y)
 false
 </code></pre><h2 id="negation">Negation</h2>
-<p>To generate the content of a <a href="how-does-opa-work.html#virtual-documents">Virtual Document</a>, OPA attempts to bind variables in the body of the rule such that all expressions in the rule evaluate to True.</p>
+<p>To generate the content of a <a href="how-does-opa-work.html#rules-and-virtual-documents">Virtual Document</a>, OPA attempts to bind variables in the body of the rule such that all expressions in the rule evaluate to True.</p>
 <p>This generates the correct result when the expressions represent assertions about what states should exist in the data stored in OPA. In some cases, you want to express that certain states <em>should not</em> exist in the data stored in OPA. In these cases, negation must be used.</p>
 <p>For safety, a variable appearing in a negated expression must also appear in another non-negated equality expression in the rule.</p>
 <blockquote>
@@ -2976,7 +3028,7 @@ pi = <span class="hljs-number">3.14159</span>
 <h3 id="imports">Imports</h3>
 <p>Import statements declare dependencies that modules have on documents defined outside the package. By importing a document, the identifiers exported by that document can be referenced within the current module.</p>
 <p>All modules contain implicit statements which import the <code>data</code> and <code>input</code> documents.</p>
-<p>Modules use the same syntax to declare dependencies on <a href="../how-does-opa-work#base-documents">Base Documents</a> and <a href="../how-does-opa-work#virtual-documents">Virtual Documents</a>.</p>
+<p>Modules use the same syntax to declare dependencies on <a href="how-does-opa-work.html#base-documents">Base Documents</a> and <a href="how-does-opa-work.html#rules-and-virtual-documents">Virtual Documents</a>.</p>
 <pre><code class="lang-ruby">package opa.examples
 
 import data.servers
@@ -3019,7 +3071,7 @@ http_servers[server] {
 </code></pre>
 <h2 id="with-keyword">With Keyword</h2>
 <p>The <code>with</code> keyword allows queries to programmatically specify values nested
-under the <a href="../how-does-opa-work#the-input-document">input Document</a> and the <a href="../how-does-opa-work#the-data-document">data Document</a>.</p>
+under the <a href="how-does-opa-work.html#the-input-document">input Document</a> and the <a href="how-does-opa-work.html#the-data-document">data Document</a>.</p>
 <p>For example, given the simple authorization policy in the <a href="#imports">Imports</a>
 section, we can write a query that checks whether a particular request would be
 allowed:</p>
@@ -3307,7 +3359,7 @@ containers = [
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"How Do I Write Policies?","level":"1.3","depth":1,"next":{"title":"What is Rego?","level":"1.3.1","depth":2,"anchor":"#what-is-rego","path":"how-do-i-write-policies.md","ref":"how-do-i-write-policies.md#what-is-rego","articles":[]},"previous":{"title":"Putting It All Together","level":"1.2.4","depth":2,"anchor":"#putting-it-all-together","path":"how-does-opa-work.md","ref":"how-does-opa-work.md#putting-it-all-together","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["header","addcssjs","collapsible-menu","custom-favicon","ga","-fontsettings","ace"],"pluginsConfig":{"collapsible-menu":{},"ace":{},"search":{},"layout":{"headerPath":"layouts/header.html"},"addcssjs":{"css":[],"js":[]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"header":{},"highlight":{},"favicon":"images/favicon.png","custom-favicon":{},"ga":{"configuration":"auto","token":"UA-84550302-1"},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"how-do-i-write-policies.md","mtime":"2018-12-10T22:15:59.705Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-12-10T22:16:58.171Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"How Do I Write Policies?","level":"1.3","depth":1,"next":{"title":"What is Rego?","level":"1.3.1","depth":2,"anchor":"#what-is-rego","path":"how-do-i-write-policies.md","ref":"how-do-i-write-policies.md#what-is-rego","articles":[]},"previous":{"title":"Putting It All Together","level":"1.2.4","depth":2,"anchor":"#putting-it-all-together","path":"how-does-opa-work.md","ref":"how-does-opa-work.md#putting-it-all-together","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["header","addcssjs","collapsible-menu","custom-favicon","ga","-fontsettings","ace"],"pluginsConfig":{"collapsible-menu":{},"ace":{},"search":{},"layout":{"headerPath":"layouts/header.html"},"addcssjs":{"css":[],"js":[]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"header":{},"highlight":{},"favicon":"images/favicon.png","custom-favicon":{},"ga":{"configuration":"auto","token":"UA-84550302-1"},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"how-do-i-write-policies.md","mtime":"2019-01-22T15:44:31.789Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-01-22T15:45:40.970Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

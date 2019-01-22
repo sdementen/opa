@@ -1895,6 +1895,32 @@
             
         </li>
     
+        <li class="chapter " data-level="1.13.2" data-path="discovery.html">
+            
+                <a href="discovery.html#example">
+            
+                    
+                    Example
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.13.3" data-path="discovery.html">
+            
+                <a href="discovery.html#limitations">
+            
+                    
+                    Limitations
+            
+                </a>
+            
+
+            
+        </li>
+    
 
             </ul>
             
@@ -1945,7 +1971,20 @@
             
         </li>
     
-        <li class="chapter " data-level="1.15" data-path="faq.html">
+        <li class="chapter " data-level="1.15" data-path="plugins.html">
+            
+                <a href="plugins.html">
+            
+                    
+                    Plugins
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.16" data-path="faq.html">
             
                 <a href="faq.html">
             
@@ -1958,7 +1997,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.16" data-path="comparison-to-other-systems.html">
+        <li class="chapter " data-level="1.17" data-path="comparison-to-other-systems.html">
             
                 <a href="comparison-to-other-systems.html">
             
@@ -1972,7 +2011,7 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.16.1" data-path="comparison-to-other-systems.html">
+        <li class="chapter " data-level="1.17.1" data-path="comparison-to-other-systems.html">
             
                 <a href="comparison-to-other-systems.html#role-based-access-control-rbac">
             
@@ -1985,7 +2024,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.16.2" data-path="comparison-to-other-systems.html">
+        <li class="chapter " data-level="1.17.2" data-path="comparison-to-other-systems.html">
             
                 <a href="comparison-to-other-systems.html#attribute-based-access-control-abac">
             
@@ -1998,7 +2037,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.16.3" data-path="comparison-to-other-systems.html">
+        <li class="chapter " data-level="1.17.3" data-path="comparison-to-other-systems.html">
             
                 <a href="comparison-to-other-systems.html#amazon-web-services-iam">
             
@@ -2011,7 +2050,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.16.4" data-path="comparison-to-other-systems.html">
+        <li class="chapter " data-level="1.17.4" data-path="comparison-to-other-systems.html">
             
                 <a href="comparison-to-other-systems.html#xacml">
             
@@ -2127,6 +2166,19 @@
             
         </li>
     
+        <li class="chapter " data-level="2.8" data-path="ceph-authorization.html">
+            
+                <a href="ceph-authorization.html">
+            
+                    
+                    Ceph Authorization
+            
+                </a>
+            
+
+            
+        </li>
+    
 
     
         
@@ -2213,6 +2265,12 @@ startup:</p>
 </ul>
 <p>OPA will exit immediately with a non-zero status code if only one of these flags
 is specified.</p>
+<p>Note that for using TLS-based authentication, a CA cert file can be provided:</p>
+<ul>
+<li><code>--tls-ca-cert-file=&lt;path&gt;</code> specifies the path of the file containing the CA cert.</li>
+</ul>
+<p>If provided, it will be used to validate clients&apos; TLS certificates when using TLS
+authentication (see below).</p>
 <p>By default, OPA ignores insecure HTTP connections when TLS is enabled. To allow
 insecure HTTP connections in addition to HTTPS connections, provide another
 listening address with <code>--addr</code>. For example:</p>
@@ -2272,6 +2330,17 @@ and provide to the authorization handler. When you use the <code>token</code>
 authentication, you must configure an authorization policy that checks the
 tokens. If the client does not supply a Bearer token, the <code>input.identity</code>
 value will be undefined when the authorization policy is evaluated.</li>
+<li><p>Client TLS certificates: Client TLS authentication is enabled by starting
+OPA with <code>--authentication=tls</code>. When this authentication mode is enabled,
+OPA will require all clients to provide a client certificate. It is verified
+against the CA certificate(s) provided via <code>--tls-ca-cert-path</code>. Upon successful
+verification, the <code>input.identity</code> value is set to the TLS certificate&apos;s
+subject.</p>
+<p>Note that TLS authentication does not disable non-HTTPS listeners. To ensure
+that all your communication is secured, it should be paired with an
+authorization policy (see below) that at least requires the client identity
+(<code>input.identity</code>) to <em>be set</em>.</p>
+</li>
 </ul>
 <p>For authorization, OPA relies on policy written in Rego. Authorization is
 enabled by starting OPA with <code>--authorization=basic</code>.</p>
@@ -2346,6 +2415,7 @@ secret from above, the request is allowed:</p>
 <pre><code class="lang-http">HTTP/1.1 <span class="hljs-number">200</span> OK
 <span class="hljs-attribute">Content-Type</span>: application/json
 </code></pre>
+<h3 id="token-based-authentication-example">Token-based Authentication Example</h3>
 <p>When Bearer tokens are used for authentication, the policy should at minimum
 validate the identity:</p>
 <pre><code class="lang-ruby">package system.authz
@@ -2419,6 +2489,109 @@ identity_rights[right] {            <span class="hljs-comment"># Right is in the
     right = rights[role]            <span class="hljs-comment"># Role has rights defined.</span>
 }
 </code></pre>
+<h3 id="tls-based-authentication-example">TLS-based Authentication Example</h3>
+<p>To set up authentication based on TLS, we will need three certificates:</p>
+<ol>
+<li>the CA cert (self-signed),</li>
+<li>the server cert (signed by the CA), and</li>
+<li>the client cert (signed by the CA).</li>
+</ol>
+<p>These are example invocations using <code>openssl</code>.
+Don&apos;t use these in production, the key sizes are only good for demonstration purposes.</p>
+<p>Note that we&apos;re creating an extra client, which has a certificate signed by the proper
+CA, but will later be used to illustrate the authorization policy.</p>
+<pre><code class="lang-bash"><span class="hljs-comment"># CA</span>
+openssl genrsa -out ca-key.pem 2048
+openssl req -x509 -new -nodes -key ca-key.pem -days 1000 -out ca.pem -subj <span class="hljs-string">&quot;/CN=my-ca&quot;</span>
+
+<span class="hljs-comment"># client 1</span>
+openssl genrsa -out client-key.pem 2048
+openssl req -new -key client-key.pem -out csr.pem -subj <span class="hljs-string">&quot;/CN=my-client&quot;</span>
+openssl x509 -req -in csr.pem -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out client-cert.pem -days 1000
+
+<span class="hljs-comment"># client 2</span>
+openssl genrsa -out client-key-2.pem 2048
+openssl req -new -key client-key-2.pem -out csr.pem -subj <span class="hljs-string">&quot;/CN=my-client-2&quot;</span>
+openssl x509 -req -in csr.pem -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out client-cert-2.pem -days 1000
+
+<span class="hljs-comment"># create server cert with IP and DNS SANs</span>
+cat &lt;&lt;EOF &gt;req.cnf
+[req]
+req_extensions = v3_req
+distinguished_name = req_distinguished_name
+
+[req_distinguished_name]
+
+[v3_req]
+basicConstraints = CA:FALSE
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = opa.example.com
+IP.1 = 127.0.0.1
+EOF
+openssl genrsa -out server-key.pem 2048
+openssl req -new -key server-key.pem -out csr.pem -subj <span class="hljs-string">&quot;/CN=my-server&quot;</span> -config req.cnf
+openssl x509 -req -in csr.pem -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out server-cert.pem -days 1000 -extensions v3_req -extfile req.cnf
+</code></pre>
+<p>We also create a simple authorization policy file, called <code>check.rego</code>:</p>
+<pre><code class="lang-ruby">package system.authz
+
+<span class="hljs-comment"># client_cns may defined in policy or pushed into OPA as data.</span>
+client_cns = {
+    <span class="hljs-string">&quot;my-client&quot;</span><span class="hljs-symbol">:</span> <span class="hljs-keyword">true</span>
+}
+
+default allow = <span class="hljs-keyword">false</span>
+
+allow {                                        <span class="hljs-comment"># Allow request if</span>
+    split(input.identity, <span class="hljs-string">&quot;=&quot;</span>, [<span class="hljs-string">&quot;CN&quot;</span>, cn]) <span class="hljs-comment"># the cert subject is a CN, and</span>
+    client_cns[cn]                         <span class="hljs-comment"># the name is a known client.</span>
+}
+</code></pre>
+<p>Now, we&apos;re ready to starting the server with <code>-authentication=tls</code> and the
+certificate-related parameters:</p>
+<pre><code class="lang-console">$ opa run -s \
+  --tls-cert-file server-cert.pem \
+  --tls-private-key-file server-key.pem \
+  --tls-ca-cert-file ca.pem \
+  --authentication=tls \
+  --authorization=basic \
+  -a https://127.0.0.1:8181 \
+  check.rego
+INFO[2019-01-14T10:24:52+01:00] First line of log stream.                     addrs=&quot;[https://127.0.0.1:8181]&quot; insecure_addr=
+</code></pre>
+<p>We can use <code>curl</code> to validate our TLS-based authentication setup:</p>
+<p>First, we use the client certificate that was signed by the CA, and has a subject
+matching our authorization policy:</p>
+<pre><code class="lang-console">$ curl --key client-key.pem \
+  --cert client-cert.pem \
+  --cacert ca.pem \
+  --resolve opa.example.com:8181:127.0.0.1 \
+  https://opa.example.com:8181/v1/data
+{&quot;result&quot;:{}}
+</code></pre>
+<p>Note that we&apos;re passing the CA cert to curl -- this is done to have curl accept
+the server&apos;s certificate, which has been signed by our CA cert.</p>
+<p>Since we&apos;ve setup an IP SAN, we may also <code>curl https://127.0.0.1:8181/v1/data</code>
+directly. (To keep our examples focused, we&apos;ll do that from here on.)</p>
+<p>Using a valid certificate whose subject will be declined by our authorization
+policy:</p>
+<pre><code class="lang-console">$ curl --key client-key-2.pem \
+  --cert client-cert-2.pem \
+  --cacert ca.pem \
+  https://127.0.0.1:8181/v1/data
+{
+  &quot;code&quot;: &quot;unauthorized&quot;,
+  &quot;message&quot;: &quot;request rejected by administrative policy&quot;
+}
+</code></pre>
+<p>Finally, we&apos;ll attempt to query without a client certificate:</p>
+<pre><code class="lang-console">$ curl --cacert ca.pem https://127.0.0.1:8181/v1/data
+curl: (35) error:14094412:SSL routines:ssl3_read_bytes:sslv3 alert bad certificate
+</code></pre>
+<p>As you can see, TLS-based authentication disallows these request completely.</p>
 
                                 
                                 </section>
@@ -2446,7 +2619,7 @@ identity_rights[right] {            <span class="hljs-comment"># Right is in the
 
             
                 
-                <a href="discovery.html#discovery-service-api" class="navigation navigation-prev " aria-label="Previous page: Service API">
+                <a href="discovery.html#limitations" class="navigation navigation-prev " aria-label="Previous page: Limitations">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
@@ -2462,7 +2635,7 @@ identity_rights[right] {            <span class="hljs-comment"># Right is in the
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Security","level":"1.14","depth":1,"next":{"title":"TLS and HTTPS","level":"1.14.1","depth":2,"anchor":"#tls-and-https","path":"security.md","ref":"security.md#tls-and-https","articles":[]},"previous":{"title":"Service API","level":"1.13.1","depth":2,"anchor":"#discovery-service-api","path":"discovery.md","ref":"discovery.md#discovery-service-api","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["header","addcssjs","collapsible-menu","custom-favicon","ga","-fontsettings","ace"],"pluginsConfig":{"collapsible-menu":{},"ace":{},"search":{},"layout":{"headerPath":"layouts/header.html"},"addcssjs":{"css":[],"js":[]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"header":{},"highlight":{},"favicon":"images/favicon.png","custom-favicon":{},"ga":{"configuration":"auto","token":"UA-84550302-1"},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"security.md","mtime":"2018-12-10T22:15:59.885Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-12-10T22:16:58.171Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Security","level":"1.14","depth":1,"next":{"title":"TLS and HTTPS","level":"1.14.1","depth":2,"anchor":"#tls-and-https","path":"security.md","ref":"security.md#tls-and-https","articles":[]},"previous":{"title":"Limitations","level":"1.13.3","depth":2,"anchor":"#limitations","path":"discovery.md","ref":"discovery.md#limitations","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["header","addcssjs","collapsible-menu","custom-favicon","ga","-fontsettings","ace"],"pluginsConfig":{"collapsible-menu":{},"ace":{},"search":{},"layout":{"headerPath":"layouts/header.html"},"addcssjs":{"css":[],"js":[]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"header":{},"highlight":{},"favicon":"images/favicon.png","custom-favicon":{},"ga":{"configuration":"auto","token":"UA-84550302-1"},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"security.md","mtime":"2019-01-22T15:44:31.953Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-01-22T15:45:40.970Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

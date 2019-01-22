@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>Status &#xB7; GitBook</title>
+        <title>Plugins &#xB7; GitBook</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -62,10 +62,10 @@
     <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="status.html">
+    <link rel="next" href="faq.html">
     
     
-    <link rel="prev" href="bundles.html">
+    <link rel="prev" href="security.html">
     
 
     </head>
@@ -1772,7 +1772,7 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.10" data-path="status.html">
+        <li class="chapter " data-level="1.10" data-path="status.html">
             
                 <a href="status.html">
             
@@ -1971,7 +1971,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.15" data-path="plugins.html">
+        <li class="chapter active" data-level="1.15" data-path="plugins.html">
             
                 <a href="plugins.html">
             
@@ -2229,7 +2229,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href=".">Status</a>
+        <a href=".">Plugins</a>
     </h1>
 </div>
 
@@ -2244,154 +2244,170 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="status">Status</h1>
-<p>OPA can periodically report status updates to remote HTTP servers. The
-updates contain status information for OPA itself as well as the
-<a href="bundles.html">Bundles</a> that have been downloaded and activated.</p>
-<p>OPA sends status reports whenever bundles are downloaded and activated. If
-the bundle download or activation fails for any reason, the status update
-will include error information describing the failure.</p>
-<p>The status updates will include a set of labels that uniquely identify the
-OPA instance. OPA automatically includes an <code>id</code> value in the label set that
-provides a globally unique identifier or the running OPA instance.</p>
-<p>See the <a href="configuration.html">Configuration Reference</a> for configuration details.</p>
-<h2 id="status-service-api">Status Service API</h2>
-<p>OPA expects the service to expose an API endpoint that will receive status
-updates.</p>
-<pre><code class="lang-http"><span class="hljs-keyword">POST</span> <span class="hljs-string">/status[/&lt;partition_name&gt;]</span> HTTP/1.1
-<span class="hljs-attribute">Content-Type</span>: application/json
-</code></pre>
-<p>The partition name is an optional path segment that can be used to route
-status updates to different backends. If the partition name is not configured
-on the agent, updates will be sent to <code>/status</code>.</p>
-<pre><code class="lang-json">{
-    <span class="hljs-string">&quot;labels&quot;</span>: {
-        <span class="hljs-string">&quot;app&quot;</span>: <span class="hljs-string">&quot;my-example-app&quot;</span>,
-        <span class="hljs-string">&quot;id&quot;</span>: <span class="hljs-string">&quot;1780d507-aea2-45cc-ae50-fa153c8e4a5a&quot;</span>
-    },
-    <span class="hljs-string">&quot;bundle&quot;</span>: {
-        <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;http/example/authz&quot;</span>,
-        <span class="hljs-string">&quot;active_revision&quot;</span>: <span class="hljs-string">&quot;TODO&quot;</span>,
-        <span class="hljs-string">&quot;last_successful_download&quot;</span>: <span class="hljs-string">&quot;2018-01-01T00:00:00.000Z&quot;</span>,
-        <span class="hljs-string">&quot;last_successful_activation&quot;</span>: <span class="hljs-string">&quot;2018-01-01T00:00:00.000Z&quot;</span>
-    }
+                                <h1 id="plugins-experimental">Plugins (Experimental)</h1>
+<p>OPA can be extended with custom built-in functions and plugins that
+implement functionality like support for new protocols.</p>
+<blockquote>
+<p>This page focuses on how to build <a href="https://golang.org/pkg/plugin/" target="_blank">Go
+plugins</a> that can be loaded when OPA
+starts however the steps are similar if you are embedding OPA as a
+library or building from source.</p>
+</blockquote>
+<h2 id="building-go-plugins">Building Go Plugins</h2>
+<p>At minimum, your Go plugin must implement the following:</p>
+<pre><code class="lang-golang"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">func</span> Init() error {
+     <span class="hljs-comment">// your init function</span>
 }
 </code></pre>
-<p>Status updates contain the following fields:</p>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>labels</code></td>
-<td><code>object</code></td>
-<td>Set of key-value pairs that uniquely identify the OPA instance.</td>
-</tr>
-<tr>
-<td><code>bundle.name</code></td>
-<td><code>string</code></td>
-<td>Name of bundle that the OPA instance is configured to download.</td>
-</tr>
-<tr>
-<td><code>bundle.active_revision</code></td>
-<td><code>string</code></td>
-<td>Opaque revision identifier of the last successful activation.</td>
-</tr>
-<tr>
-<td><code>bundle.last_successful_download</code></td>
-<td><code>string</code></td>
-<td>RFC3339 timestamp of last successful bundle download.</td>
-</tr>
-<tr>
-<td><code>bundle.last_successful_activation</code></td>
-<td><code>string</code></td>
-<td>RFC3339 timestamp of last successful bundle activation.</td>
-</tr>
-<tr>
-<td><code>discovery.name</code></td>
-<td><code>string</code></td>
-<td>Name of discovery bundle that the OPA instance is configured to download.</td>
-</tr>
-<tr>
-<td><code>discovery.active_revision</code></td>
-<td><code>string</code></td>
-<td>Opaque revision identifier of the last successful discovery activation.</td>
-</tr>
-<tr>
-<td><code>discovery.last_successful_download</code></td>
-<td><code>string</code></td>
-<td>RFC3339 timestamp of last successful discovery bundle download.</td>
-</tr>
-<tr>
-<td><code>discovery.last_successful_activation</code></td>
-<td><code>string</code></td>
-<td>RFC3339 timestamp of last successful discovery bundle activation.</td>
-</tr>
-</tbody>
-</table>
-<p>If the bundle download or activation failed, the status update will contain
-the following additional fields.</p>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>bundle.code</code></td>
-<td><code>string</code></td>
-<td>If present, indicates error(s) occurred.</td>
-</tr>
-<tr>
-<td><code>bundle.message</code></td>
-<td><code>string</code></td>
-<td>Human readable messages describing the error(s).</td>
-</tr>
-<tr>
-<td><code>bundle.errors</code></td>
-<td><code>array</code></td>
-<td>Collection of detailed parse or compile errors that occurred during activation.</td>
-</tr>
-</tbody>
-</table>
-<p>If the bundle download or activation failed, the status update will contain
-the following additional fields.</p>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>discovery.code</code></td>
-<td><code>string</code></td>
-<td>If present, indicates error(s) occurred.</td>
-</tr>
-<tr>
-<td><code>discovery.message</code></td>
-<td><code>string</code></td>
-<td>Human readable messages describing the error(s).</td>
-</tr>
-<tr>
-<td><code>discovery.errors</code></td>
-<td><code>array</code></td>
-<td>Collection of detailed parse or compile errors that occurred during activation.</td>
-</tr>
-</tbody>
-</table>
-<p>Services should reply with HTTP status <code>200 OK</code> if the status update is
-processed successfully.</p>
+<p>When OPA starts, it will invoke the <code>Init</code> function which can:</p>
+<ul>
+<li>Register custom built-in functions.</li>
+<li>Register custom OPA plugins (e.g., decision loggers, servers, etc.)</li>
+<li>...or do anything else.</li>
+</ul>
+<p>See the sections below for examples.</p>
+<p>To build your plugin into a shared object file (<code>.so</code>), you will
+(minimally) run the following command:</p>
+<pre><code class="lang-bash">go build -buildmode=plugin -o=plugin.so plugin.go
+</code></pre>
+<p>This will produce a file named <code>plugin.so</code> that you can pass to OPA
+with the <code>--plugin-dir</code> flag. OPA will load all of the <code>.so</code> files out
+of the directory you give it.</p>
+<pre><code class="lang-bash">opa --plugin-dir=/path/to/plugins run
+</code></pre>
+<p><strong>NOTE:</strong> You must build your plugin against the same version of the
+  OPA that will eventually load the shared object file. If you build
+  your plugin against a different version of the OPA source, the OPA
+  will fail to start. You will see an error message like:</p>
+<pre><code>Error: plugin.Open(&quot;plugin/logger&quot;): plugin was built with a different version of package github.com/open-policy-agent/opa/ast
+</code></pre><h2 id="built-in-functions">Built-in Functions</h2>
+<p>To implement custom built-in functions your <code>Init</code> function should call:</p>
+<ul>
+<li><code>ast.RegisterBuiltin</code> to declare the built-in function.</li>
+<li><code>topdown.RegisterFunctionalBuiltin[X]</code> to register the built-in function implementation (where X is replaced by the number of parameters your function receives.)</li>
+</ul>
+<p>For example:</p>
+<pre><code class="lang-golang"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> (
+    <span class="hljs-string">&quot;github.com/open-policy-agent/opa/ast&quot;</span>
+    <span class="hljs-string">&quot;github.com/open-policy-agent/opa/types&quot;</span>
+    <span class="hljs-string">&quot;github.com/open-policy-agent/opa/topdown&quot;</span>
+    <span class="hljs-string">&quot;github.com/open-policy-agent/opa/topdown/builtins&quot;</span>
+)
+
+<span class="hljs-keyword">var</span> HelloBuiltin = &amp;ast.Builtin{
+    Name: <span class="hljs-string">&quot;hello&quot;</span>,
+    Decl: types.NewFunction(
+        types.Args(types.S),
+        types.S,
+    ),
+}
+
+<span class="hljs-keyword">func</span> HelloImpl(a ast.Value) (ast.Value, error) {
+    s, err := builtins.StringOperand(a, <span class="hljs-number">1</span>)
+    <span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> {
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>, err
+    }
+    <span class="hljs-keyword">return</span> ast.String(<span class="hljs-string">&quot;hello, &quot;</span> + <span class="hljs-keyword">string</span>(s)), <span class="hljs-literal">nil</span>
+}
+
+<span class="hljs-keyword">func</span> Init() error {
+    ast.RegisterBuiltin(HelloBuiltin)
+    topdown.RegisterFunctionalBuiltin1(HelloBuiltin.Name, HelloImpl)
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>
+}
+</code></pre>
+<p>If you build this file into a shared object and start OPA with it you can call it like other built-in functions:</p>
+<pre><code>&gt; hello(&quot;bob&quot;)
+&quot;hello, bob&quot;
+</code></pre><p>For more details on implementing built-in functions, see the <a href="https://godoc.org/github.com/open-policy-agent/opa/topdown#example-RegisterFunctionalBuiltin1" target="_blank">OPA Go Documentation</a>.</p>
+<h2 id="custom-plugins">Custom Plugins</h2>
+<p>OPA defines a plugin interface that allows you to customize certain
+behaviour like decision logging or add new behaviour like different
+query APIs. To implement a custom plugin you must implement two
+interfaces:</p>
+<ul>
+<li><a href="https://godoc.org/github.com/open-policy-agent/opa/plugins#Factory" target="_blank">github.com/open-policy-agent/opa/plugins#Factory</a> to instantiate your plugin.</li>
+<li><a href="https://godoc.org/github.com/open-policy-agent/opa/plugins#Plugin" target="_blank">github.com/open-policy-agent/opa/plugins#Plugin</a> to provide your plugin behavior.</li>
+</ul>
+<p>You can register your factory with OPA by calling <a href="https://godoc.org/github.com/open-policy-agent/opa/runtime#RegisterPlugin" target="_blank">github.com/open-policy-agent/opa/runtime#RegisterPlugin</a> inside your <code>Init</code> function.</p>
+<h3 id="putting-it-together">Putting It Together</h3>
+<p>The example below shows how you can implement a custom <a href="decision_logs.html">Decision Logger</a>
+that writes events to a stream (e.g., stdout/stderr).</p>
+<pre><code class="lang-golang"><span class="hljs-keyword">type</span> Config <span class="hljs-keyword">struct</span> {
+    Stderr <span class="hljs-keyword">bool</span> <span class="hljs-string">`json:&quot;stderr&quot;`</span> <span class="hljs-comment">// false =&gt; stdout, true =&gt; stderr</span>
+}
+
+<span class="hljs-keyword">type</span> PrintlnLogger <span class="hljs-keyword">struct</span> {
+    mtx sync.Mutex
+    config Config
+}
+
+<span class="hljs-keyword">func</span> (p *PrintlnLogger) Start(ctx context.Context) error {
+    <span class="hljs-comment">// No-op.</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>
+}
+
+<span class="hljs-keyword">func</span> (p *PrintlnLogger) Stop(ctx context.Context) {
+    <span class="hljs-comment">// No-op.</span>
+}
+
+<span class="hljs-keyword">func</span> (p *PrintlnLogger) Reconfigure(ctx context.Context, config <span class="hljs-keyword">interface</span>{}) {
+    p.mtx.Lock()
+    <span class="hljs-keyword">defer</span> p.mtx.Unlock()
+    p.config = config.(Config)
+}
+
+<span class="hljs-keyword">func</span> (p *PrintlnLogger) Log(ctx context.Context, event logs.EventV1) {
+    p.mtx.Lock()
+    <span class="hljs-keyword">defer</span> p.mtx.Unlock()
+    w := os.Stdout
+    <span class="hljs-keyword">if</span> p.config.Stderr {
+        w = os.Stderr
+    }
+    fmt.Fprintln(w, event) <span class="hljs-comment">// ignoring errors!</span>
+}
+</code></pre>
+<p>Next, implement a factory function that instantiates your plugin:</p>
+<pre><code class="lang-golang"><span class="hljs-keyword">type</span> Factory <span class="hljs-keyword">struct</span>{}
+
+<span class="hljs-keyword">func</span> (Factory) New(_ *plugins.Manager, config <span class="hljs-keyword">interface</span>{}) plugins.Plugin {
+    <span class="hljs-keyword">return</span> &amp;PrintlnLogger{
+        config: config.(Config),
+    }
+}
+
+<span class="hljs-keyword">func</span> (Factory) Validate(_ *plugins.Manager, config []<span class="hljs-keyword">byte</span>) (<span class="hljs-keyword">interface</span>{}, error) {
+    parsedConfig := Config{}
+    <span class="hljs-keyword">return</span> parsedConfig, util.Unmarshal(config, &amp;parsedConfig)
+}
+</code></pre>
+<p>Finally, register your factory with OPA:</p>
+<pre><code class="lang-golang"><span class="hljs-keyword">func</span> Init() {
+    runtime.RegisterPlugin(<span class="hljs-string">&quot;println_decision_logger&quot;</span>, Factory{})
+}
+</code></pre>
+<p>To test your plugin, build a shared object file:</p>
+<pre><code>go build -buildmode=plugin -o=plugin.so main.go
+</code></pre><p>Define an OPA configuration file that will use your plugin:</p>
+<p><strong>config.yaml</strong>:</p>
+<pre><code class="lang-yaml"><span class="hljs-attr">decision_logs:</span>
+<span class="hljs-attr">  plugin:</span> println_decision_logger
+<span class="hljs-attr">plugins:</span>
+<span class="hljs-attr">  println_decision_logger:</span>
+<span class="hljs-attr">    stderr:</span> <span class="hljs-literal">false</span>
+</code></pre>
+<p>Start OPA with the plugin directory and configuration file:</p>
+<pre><code class="lang-bash">opa --plugin-dir <span class="hljs-variable">$PWD</span> run --server --config-file config.yaml
+</code></pre>
+<p>Exercise the plugin via the OPA API:</p>
+<pre><code>curl localhost:8181/v1/data
+</code></pre><p>If everything worked you will see the Go struct representation of the decision
+log event written to stdout.</p>
+<p>The source code for this example can be found <a href="https://github.com/open-policy-agent/contrib/tree/master/decision_logger_plugin_example" target="_blank">here</a>.</p>
 
                                 
                                 </section>
@@ -2419,12 +2435,12 @@ processed successfully.</p>
 
             
                 
-                <a href="bundles.html#bundle-file-format" class="navigation navigation-prev " aria-label="Previous page: File Format">
+                <a href="security.html#authentication-and-authorization" class="navigation navigation-prev " aria-label="Previous page: Authentication and Authorization">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="status.html#status-service-api" class="navigation navigation-next " aria-label="Next page: Service API">
+                <a href="faq.html" class="navigation navigation-next " aria-label="Next page: FAQ">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -2435,7 +2451,7 @@ processed successfully.</p>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Status","level":"1.10","depth":1,"next":{"title":"Service API","level":"1.10.1","depth":2,"anchor":"#status-service-api","path":"status.md","ref":"status.md#status-service-api","articles":[]},"previous":{"title":"File Format","level":"1.9.2","depth":2,"anchor":"#bundle-file-format","path":"bundles.md","ref":"bundles.md#bundle-file-format","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["header","addcssjs","collapsible-menu","custom-favicon","ga","-fontsettings","ace"],"pluginsConfig":{"collapsible-menu":{},"ace":{},"search":{},"layout":{"headerPath":"layouts/header.html"},"addcssjs":{"css":[],"js":[]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"header":{},"highlight":{},"favicon":"images/favicon.png","custom-favicon":{},"ga":{"configuration":"auto","token":"UA-84550302-1"},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"status.md","mtime":"2019-01-22T15:44:31.953Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-01-22T15:45:40.970Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Plugins","level":"1.15","depth":1,"next":{"title":"FAQ","level":"1.16","depth":1,"path":"faq.md","ref":"faq.md","articles":[]},"previous":{"title":"Authentication and Authorization","level":"1.14.2","depth":2,"anchor":"#authentication-and-authorization","path":"security.md","ref":"security.md#authentication-and-authorization","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["header","addcssjs","collapsible-menu","custom-favicon","ga","-fontsettings","ace"],"pluginsConfig":{"collapsible-menu":{},"ace":{},"search":{},"layout":{"headerPath":"layouts/header.html"},"addcssjs":{"css":[],"js":[]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"header":{},"highlight":{},"favicon":"images/favicon.png","custom-favicon":{},"ga":{"configuration":"auto","token":"UA-84550302-1"},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"plugins.md","mtime":"2019-01-22T15:44:31.953Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-01-22T15:45:40.970Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>
